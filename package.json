@@ -1,0 +1,22 @@
+{
+  "name": "musicconverter",
+  "version": "1.0.0",
+  "description": "convert spotify playlist to Apple Music",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gracelo0717/MusicConverter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gracelo0717/MusicConverter/issues"
+  },
+  "homepage": "https://github.com/gracelo0717/MusicConverter#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
