@@ -2,33 +2,48 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const PORT = process.env.port || 3000;
 
+const spotifyController = require('./controllers/spotifyController');
 
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
+app.use(session({ secret: 'abc', cookie: {} }));
+
+app.get(
+  '/spotify/apiRedirect',
+  spotifyController.spotifyRedirect,
+  (req, res) => {
+    console.log(res.locals.result);
+    req.session.codeVerifier = res.locals.result.codeVerifier;
+    res.status(200).json({ url: res.locals.result.url });
+  }
+);
+
+app.get('/spotify/apiCatch', spotifyController.apiCatch, (req, res) => {
+  console.log(res.locals.result);
+});
 
 // Catch-All Route
 app.get('/*', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, '../dist/index.html'),
-    function (err) {
-      if (err) {
-        res.status(500).send(err);
-      }
+  res.sendFile(path.join(__dirname, '../dist/index.html'), function (err) {
+    if (err) {
+      res.status(500).send(err);
     }
-  );
+  });
 });
 
 // Global Error Handler
 app.use((err, req, res, next) => {
+  console.log(err);
   const defaultErr = {
     log: 'Express error handler caught unknown middleware error',
     status: 500,
-    message: { err: 'An error occurred' },
+    message: { err: 'An error occurred', stuff: err },
   };
   const errorObj = Object.assign({}, defaultErr, err);
   console.log(errorObj.log);
@@ -36,5 +51,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
+  console.log(`Listening on port ${PORT}`);
 });
