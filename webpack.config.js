@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './client/src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -15,7 +15,7 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: { presets: ['@babel/env', '@babel/react'] },
+          options: { presets: ['@babel/preset-env', '@babel/preset-react'] },
         },
       },
       {
@@ -64,7 +64,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './client/public/index.html',
     }),
   ],
   devServer: {
@@ -77,7 +77,7 @@ module.exports = {
     hot: true,
     proxy: [
       {
-        context: ['/'],
+        context: ['/api'],
         target: 'http://localhost:3000',
       },
     ],
