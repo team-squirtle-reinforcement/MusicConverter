@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const fs = require('node:fs');
 const PORT = process.env.port || 3000;
 
 const spotifyController = require('./controllers/spotifyController');
@@ -12,20 +12,22 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 app.use(cookieParser());
-app.use(session({ secret: 'abc', cookie: {} }));
 
 app.get(
   '/spotify/apiRedirect',
   spotifyController.spotifyRedirect,
   (req, res) => {
     console.log(res.locals.result);
-    req.session.codeVerifier = res.locals.result.codeVerifier;
     res.status(200).json({ url: res.locals.result.url });
   }
 );
 
 app.get('/spotify/apiCatch', spotifyController.apiCatch, (req, res) => {
   console.log(res.locals.result);
+  //fs.rm(path.join(__dirname, '/controllers/' , 'codeVerifier.json'), ()=>{});
+  res.cookie('access_token', res.locals.result.access_token);
+  res.cookie('refresh_token', res.locals.result.refresh_token);
+  return res.redirect('/');
 });
 
 // Catch-All Route
