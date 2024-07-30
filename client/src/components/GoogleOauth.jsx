@@ -43,7 +43,7 @@ const GoogleOauth = () => {
   //   }
 
   // }
-
+  //need a button for youtube/ oauth login
   const auth = async () => {
     try {
       const response = await fetch('api/google');
@@ -56,7 +56,7 @@ const GoogleOauth = () => {
       console.error('There was a problem with the fetch operation:', err);
     }
   };
-
+  //this should go inside transfer now, after we get the all the list from spotify, we create a playlist then pass all songs
   const create = async () => {
     try{
       const response = await fetch('api/google/playlist')

@@ -6,8 +6,8 @@ const url = require('url');
 const redirectUrl = 'http://localhost:8080/api/google/oauth2callback';
 
 const oauth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
   redirectUrl
 );
 
