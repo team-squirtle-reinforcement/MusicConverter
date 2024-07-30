@@ -11,11 +11,11 @@ const FlexContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
     height: '100%',
     gap: 'auto',
-    // padding: '1rem',
 
     // backgroundColor: 'magenta',
   }));
@@ -61,6 +61,18 @@ const getSpotifyApi = ()=>{
       })
     }
 
+    const googleOauth = async () => {
+      try {
+        const response = await fetch('api/google');
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const url = await response.json();
+        window.location.href = url;
+      } catch (err) {
+        console.error('There was a problem with the fetch operation:', err);
+      }
+    };
 
 
 function HomeContainer() {
@@ -74,8 +86,8 @@ function HomeContainer() {
   }
 
   return (
-    <FlexContainer className='FlexContainer'>
-        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} />
+    <FlexContainer className='FlexContainer' maxWidth='xl'>
+        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} googleOauth={googleOauth}/>
     </FlexContainer>
   )
 }
