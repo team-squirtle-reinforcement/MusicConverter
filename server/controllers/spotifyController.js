@@ -122,4 +122,33 @@ spotifyController.apiCatch = (req, res, next) => {
   }
 };
 
+spotifyController.getTrackData = (req, res, next) => {
+  const { token, playlist_id } = req.body;
+
+  const url = new URL('https://api.spotify.com/v1/playlists/' + playlist_id);
+  url.search = new URLSearchParams({
+    fields: 'description,tracks.items(track(name,artists.name))',
+  }).toString();
+
+  console.log(url);
+
+  fetch(url.href, { headers: { Authorization: 'Bearer ' + token } })
+    .then((result) => {
+      result.json().then((json) => {
+        console.log(JSON.stringify(json, null, 2));
+        // fs.writeFile(
+        //   path.join(__dirname, 'playlist_example.json'),
+        //   JSON.stringify(json, null, 2),
+        //   { flag: 'w' },
+        //   () => {}
+        // );
+        res.locals.result = json;
+        return next();
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 module.exports = spotifyController;
