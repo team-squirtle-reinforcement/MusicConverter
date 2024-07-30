@@ -33,7 +33,7 @@ function App() {
   return (
     <div>App
     <div>
-        <button onClick={getSpotfiyApi} >Press Me</button>
+        <button onClick={getSpotfiyApi} >Set Spotify Access Token</button>
       </div>
 </div>
   )

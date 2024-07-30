@@ -24,7 +24,7 @@ app.get(
 
 app.get('/spotify/apiCatch', spotifyController.apiCatch, (req, res) => {
   console.log(res.locals.result);
-  //fs.rm(path.join(__dirname, '/controllers/' , 'codeVerifier.json'), ()=>{});
+  fs.rm(path.join(__dirname, '/controllers/', 'codeVerifier.json'), () => {});
   res.cookie('spotify_access_token', res.locals.result.access_token);
   res.cookie('spotify_refresh_token', res.locals.result.refresh_token);
   return res.redirect('http://localhost:8080');
