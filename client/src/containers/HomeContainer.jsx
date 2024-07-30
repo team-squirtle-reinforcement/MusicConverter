@@ -14,8 +14,17 @@ const FlexContainer = styled(Container)(({ theme }) => ({
     // justifyContent: 'center',
     justifyContent: 'space-between',
     width: '100%',
+    minWidth: '300px',
     height: '100%',
-    gap: 'auto',
+
+    [theme.breakpoints.down('lg')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap: '6rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gap: '0rem',
+    }
 
     // backgroundColor: 'magenta',
   }));
