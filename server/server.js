@@ -1,17 +1,23 @@
 const express = require("express");
 const app = express();
-const path = require("path");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const fs = require("node:fs");
+const path = require('path');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const googleRouter = require('./router/googleRouter');
 const PORT = process.env.port || 3000;
+const fs = require("node:fs");
+
 
 const spotifyController = require("./controllers/spotifyController");
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
+
+app.use('/api/google', googleRouter);
+
+// app.use(express.static(path.join(__dirname, '../dist')));
 
 app.get(
   "/spotify/apiRedirect",

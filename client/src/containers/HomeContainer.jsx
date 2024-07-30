@@ -61,6 +61,18 @@ const getSpotifyApi = ()=>{
       })
     }
 
+    const googleOauth = async () => {
+      try {
+        const response = await fetch('api/google');
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const url = await response.json();
+        window.location.href = url;
+      } catch (err) {
+        console.error('There was a problem with the fetch operation:', err);
+      }
+    };
 
 
 function HomeContainer() {
@@ -75,7 +87,7 @@ function HomeContainer() {
 
   return (
     <FlexContainer className='FlexContainer' maxWidth='xl'>
-        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} />
+        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} googleOauth={googleOauth}/>
     </FlexContainer>
   )
 }

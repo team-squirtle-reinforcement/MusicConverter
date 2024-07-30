@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from '@mui/system';
 import { Box, Container, Typography, Button } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
+import GoogleOauth from './GoogleOauth';
 import { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
 
 const HeroContent = styled(Container)(({ theme }) => ({
@@ -64,7 +65,7 @@ const HeroImage = styled(Box)(({ theme }) => ({
 
 
 
-function Home({ getSpotifyApi, getTracks }) {
+function Home({ getSpotifyApi, getTracks, googleOauth }) {
   return (
     <>
     {/* <Container sx={{backgroundColor:'magenta', borderRadius: '0.5em', minHeight: '100vh'}}>  */}
@@ -72,7 +73,8 @@ function Home({ getSpotifyApi, getTracks }) {
         <HeroContent className='HeroContent'>
             <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
             <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-            <YouTubeButton>Connect to YouTube</YouTubeButton>
+            <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
+            <GoogleOauth />
             <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
             <input id='spotify-playlist'></input>
         </HeroContent>
