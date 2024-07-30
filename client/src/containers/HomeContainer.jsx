@@ -11,11 +11,11 @@ const FlexContainer = styled(Container)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
     height: '100%',
     gap: 'auto',
-    // padding: '1rem',
 
     // backgroundColor: 'magenta',
   }));
@@ -48,7 +48,7 @@ function HomeContainer() {
   }
 
   return (
-    <FlexContainer className='FlexContainer'>
+    <FlexContainer className='FlexContainer' maxWidth='xl'>
         <Home getSpotifyApi={getSpotifyApi} />
     </FlexContainer>
   )

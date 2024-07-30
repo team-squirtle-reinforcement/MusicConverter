@@ -62,5 +62,6 @@ const customTheme = createTheme({
 })
 
 export const spotifyThemeColor = '#1ED760';
+export const youtTubeThemeColor = '#FF0302';
 
 export default customTheme;
