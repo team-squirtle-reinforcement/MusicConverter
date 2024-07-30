@@ -15,6 +15,7 @@ const FlexContainer = styled(Container)(({ theme }) => ({
     width: '100%',
     height: '100%',
     gap: 'auto',
+    // padding: '1rem',
 
     // backgroundColor: 'magenta',
   }));

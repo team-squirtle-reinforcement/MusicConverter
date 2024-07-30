@@ -26,7 +26,7 @@ const customTheme = createTheme({
     },
     typography: {
         h1: {
-            fontSize: '5rem',
+            fontSize: '6rem',
             fontWeight: 900,
             fontFamily: 'Merriweather Sans, sans-serif',
             textAlign: 'center',

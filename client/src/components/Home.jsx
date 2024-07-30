@@ -8,7 +8,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  width: '600px',
+  width: '700px',
   height: 'min-content',
 
   // backgroundColor: 'blue',
@@ -17,7 +17,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
 const HeroHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.white.main,
   textAlign: 'left',
-  letterSpacing: '-.05em',
+  letterSpacing: '-.04em',
   display: 'inline',
   marginBottom: '12px',
 }));
