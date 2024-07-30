@@ -11,9 +11,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
   width: '700px',
   height: 'min-content',
   margin: 0,
-
-  // backgroundColor: 'blue',
-}))
+}));
 
 const HeroHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.white.main,
@@ -28,7 +26,7 @@ const BaseButton = styled(Button)(({ theme }) => ({
   width: '400px',
   '&:hover': {
     outline: `2px solid ${theme.palette.primary.main}`,
-  }
+  },
 }));
 
 const SpotifyButton = styled(BaseButton)(({ theme }) => ({
@@ -36,7 +34,7 @@ const SpotifyButton = styled(BaseButton)(({ theme }) => ({
   marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${spotifyThemeColor}`,
-  }
+  },
 }));
 
 const YouTubeButton = styled(BaseButton)(({ theme }) => ({
@@ -44,7 +42,7 @@ const YouTubeButton = styled(BaseButton)(({ theme }) => ({
   marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${youtTubeThemeColor}`,
-  }
+  },
 }));
 
 const TransferNowButton = styled(BaseButton)(({ theme }) => ({
@@ -52,35 +50,46 @@ const TransferNowButton = styled(BaseButton)(({ theme }) => ({
 }));
 
 const HeroImage = styled(Box)(({ theme }) => ({
-    backgroundImage: `url(${heroImage})`,
-    width: '500px',
-    height: '500px',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
-
-    // border: '2px solid green',
+  backgroundImage: `url(${heroImage})`,
+  width: '500px',
+  height: '500px',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'contain',
+  backgroundPosition: 'center',
 }));
 
-
+// styling for playlist url input box
+const StyledInput = styled('input')(({ theme }) => ({
+  border: '2px solid',
+  borderColor: theme.palette.white,
+  borderRadius: '4px',
+  color: theme.palette.text.primary,
+  padding: '10px 15px',
+  fontSize: '16px',
+  backgroundColor: theme.palette.background.paper,
+  width: '100%',
+  boxSizing: 'border-box',
+  marginBottom: '24px',
+}));
 
 function Home({ getSpotifyApi, getTracks }) {
   return (
     <>
-    {/* <Container sx={{backgroundColor:'magenta', borderRadius: '0.5em', minHeight: '100vh'}}>  */}
-        {/* <Box sx={{display: 'flex', flexDirection: 'column'}}> */}
-        <HeroContent className='HeroContent'>
-            <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
-            <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-            <YouTubeButton>Connect to YouTube</YouTubeButton>
-            <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
-            <input id='spotify-playlist'></input>
-        </HeroContent>
-        {/* </Box> */}
-        <HeroImage className='HeroImage' />
-    {/* </Container> */}
+      <HeroContent className='HeroContent'>
+        <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
+        <SpotifyButton onClick={getSpotifyApi}>
+          Connect to Spotify
+        </SpotifyButton>
+        <YouTubeButton>Connect to YouTube</YouTubeButton>
+        <StyledInput
+          id='spotify-playlist'
+          placeholder='Enter Spotify Playlist URL'
+        />
+        <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
+      </HeroContent>
+      <HeroImage className='HeroImage' />
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;
