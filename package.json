@@ -4,7 +4,7 @@
   "description": "convert spotify playlist to Apple Music",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open --hot",
+    "start": "concurrently \"webpack-dev-server --mode development --open --hot\" \"nodemon ./server/server.js\"",
     "build": "webpack --mode production"
   },
   "repository": {
@@ -18,12 +18,15 @@
   },
   "homepage": "https://github.com/gracelo0717/MusicConverter#readme",
   "dependencies": {
+    "concurrently": "^8.2.2",
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "googleapis": "^140.0.1",
     "html-webpack-plugin": "^5.6.0",
+    "nodemon": "^3.1.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "run": "^1.5.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",
