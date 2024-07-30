@@ -1,4 +1,5 @@
 import React from 'react';
+import GoogleOauth from './components/GoogleOauth';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { createGlobalStyle } from 'styled-components';

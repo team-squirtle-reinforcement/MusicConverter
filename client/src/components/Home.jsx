@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from '@mui/system';
 import { Box, Container, Typography, Button, TextField } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
+import GoogleOauth from './GoogleOauth';
 import { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
 import customTheme from '../theme/customTheme';
 
@@ -139,13 +140,14 @@ const HeroImage = styled(Box)(({ theme }) => ({
 
 
 
-function Home({ getSpotifyApi, getTracks }) {
+function Home({ getSpotifyApi, getTracks, googleOauth }) {
   return (
     <>
       <HeroContent className='HeroContent'>
           <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
           <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-          <YouTubeButton>Connect to YouTube</YouTubeButton>
+          <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
+            <GoogleOauth />
           <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
           <HomeInput id='spotify-playlist' variant='outlined'></HomeInput>
       </HeroContent>
