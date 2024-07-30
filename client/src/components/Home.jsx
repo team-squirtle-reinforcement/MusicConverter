@@ -55,7 +55,7 @@ const HeroImage = styled(Box)(({ theme }) => ({
 
 
 
-function Home({ getSpotifyApi }) {
+function Home({ getSpotifyApi, getTracks }) {
   return (
     <>
     {/* <Container sx={{backgroundColor:'magenta', borderRadius: '0.5em', minHeight: '100vh'}}>  */}
@@ -63,7 +63,8 @@ function Home({ getSpotifyApi }) {
         <HeroContent className='HeroContent'>
             <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
             <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-            <TransferNowButton>Transfer Now</TransferNowButton>
+            <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
+            <input id='spotify-playlist'></input>
         </HeroContent>
         {/* </Box> */}
         <HeroImage className='HeroImage' />

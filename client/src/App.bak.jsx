@@ -27,16 +27,7 @@ function App() {
     playlist_id = playlist_id[playlist_id.length - 1];
     playlist_id = playlist_id.split('?')[0];
     console.log('PLAYLIST ID: ', playlist_id);
-  //   axios({
-  //     method: 'GET',
-  //     url: 'http://localhost:3000/spotify/getTrackData', 
-  //     data:{token: window.localStorage.getItem('spotify_access_token'),
-  //           playlist_id: playlist_id
-  //     },
-  //     headers: {
-  //   'Content-Type': 'application/json'
-  // }
-  //   })
+
     fetch('http://localhost:3000/spotify/getTrackData', {
       method:'POST',
       headers:{'Content-Type': 'application/json'},
@@ -68,7 +59,7 @@ function App() {
     <div>
         <button onClick={getSpotfiyApi} >Set Spotify Access Token</button>
         <br/>
-        <input id='spotify-playlist' value='https://open.spotify.com/playlist/37i9dQZF1Fa1IIVtEpGUcU?si=72a00a46151e4d50'></input>
+        <input id='spotify-playlist'></input>
         <button onClick={getTracks} >Get Tracks</button>
       </div>
 </div>
