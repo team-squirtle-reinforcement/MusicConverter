@@ -3,6 +3,7 @@ import { styled } from '@mui/system';
 import { Box, Container, Typography, Button } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
 import { spotifyThemeColor } from '../theme/customTheme';
+import GoogleOauth from './GoogleOauth';
 
 const HeroContent = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -63,6 +64,7 @@ function Home({ getSpotifyApi, getTracks }) {
         <HeroContent className='HeroContent'>
             <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
             <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
+            <GoogleOauth />
             <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
             <input id='spotify-playlist'></input>
         </HeroContent>

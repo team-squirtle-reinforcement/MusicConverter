@@ -118,7 +118,61 @@ const googleAuthController = {
         },
       });
     }
-  }
+  },
+
+  searchVideos: async (req, res, next) => {
+    const tokens = req.cookies.tokens;
+    if (!tokens) {
+      return next({
+        log: 'Error in googleAuthController.searchVideos middleware function: No tokens found',
+        status: 401,
+        message: {
+          err: 'No tokens found for searching videos',
+        },
+      });
+    }
+
+    oauth2Client.setCredentials(tokens);
+
+    const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
+
+    const queries = req.query.q.split(',');
+    if (!queries || queries.length === 0) {
+      return next({
+        log: 'Error in googleAuthController.searchVideos middleware function: No query parameter provided',
+        status: 400,
+        message: {
+          err: 'No query parameter provided for searching videos',
+        },
+      });
+    }
+
+    try {
+      const videoIds = [];
+      for (const query of queries) {
+        const response = await youtube.search.list({
+          part: 'snippet',
+          q: query.trim(),
+          maxResults: 1
+        });
+
+        if (response.data.items.length > 0) {
+          videoIds.push(response.data.items[0].id.videoId);
+        }
+      }
+
+      res.locals.videoIds = videoIds;
+      return next();
+    } catch (err) {
+      return next({
+        log: `Error in googleAuthController.searchVideos middleware function: ${err}`,
+        status: 500,
+        message: {
+          err: 'Error searching for videos',
+        },
+      });
+    }
+  },
 };
 
 module.exports = googleAuthController;
