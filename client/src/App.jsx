@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 import customTheme from './theme/customTheme';
 import HomeContainer from './containers/HomeContainer';
 
+// define global styles
 const GlobalStyle = createGlobalStyle`
   * {
     box-style: border-box;
