@@ -1,6 +1,7 @@
 require('dotenv').config();
 const crypto = require('node:crypto');
 const fs = require('node:fs');
+const { URLSearchParams } = require('node:url');
 const path = require('path');
 
 spotifyController = {};
@@ -17,11 +18,24 @@ spotifyController.spotifyRedirect = (req, res, next) => {
   const codeVerifier = generateRandomString(128);
   console.log('CODE VERIFIER: ', codeVerifier);
 
+    fs.writeFile(
+      path.join(__dirname, 'codeVerifier.json'),
+        JSON.stringify({codeVerifier: codeVerifier}),
+        {flag: 'w'},
+      (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('file written successfully');
+
   const sha256 = (plain) => {
     const hash = crypto.createHash('sha256');
     hash.update(plain);
     const encoded = hash.digest('base64');
-    return encoded;
+    return encoded
+          .replace(/=/g, '')
+          .replace(/\+/g, '-')
+          .replace(/\//g, '_');
   };
 
   // const base64encode = (input) => {
@@ -54,28 +68,57 @@ spotifyController.spotifyRedirect = (req, res, next) => {
   authURL.search = new URLSearchParams(params).toString();
   console.log(authURL);
   res.locals.result = { url: authURL.href, codeVerifier: codeVerifier };
-  next();
+  return next();
+        }
+      }
+    );
 };
 
 spotifyController.apiCatch = (req, res, next) => {
   if (req.query.code) {
-    console.log(req);
-    fs.writeFile(
-      path.join(__dirname, 'stuff.json'),
-      JSON.stringify(req,null,2),
-      (err) => {
-        if (err) {
-          console.error(err);
-        } else {
-          // file written successfully
-        }
-      }
-    );
     console.log(req.query.code);
-    console.log(req.session.codeVerifier);
-  }
+    const code = req.query.code;
+    let codeVerifier;
 
-  next();
+    fs.readFile(path.join(__dirname,'codeVerifier.json'), 'utf8', (err, data)=>{
+      if(err)console.log(err)
+        else{
+          const obj = JSON.parse(data);
+          fs.rm(path.join(__dirname, '/controllers/' , 'codeVerifier.json'), ()=>{});
+          codeVerifier = obj.codeVerifier;
+          console.log('CODE VERIFIER OTHER SIDE:', codeVerifier);
+          
+
+          const payload = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              client_id: '952b1205b6bf4708b00d3391cbaee230',
+              grant_type: 'authorization_code',
+              code,
+              redirect_uri: 'http://localhost:3000/spotify/apiCatch',
+              code_verifier: codeVerifier,
+            }),
+          }
+
+          console.log(payload);
+          fetch('https://accounts.spotify.com/api/token', payload).then(result=>{
+            result.json().then(json=>{
+              console.log(json);
+              res.locals.result = json;
+              return next();
+            });
+          }).catch(err=>{
+            console.log(err);
+          });
+          
+        }
+
+    });
+
+  }
 };
 
 module.exports = spotifyController;
