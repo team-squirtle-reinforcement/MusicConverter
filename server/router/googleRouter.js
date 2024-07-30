@@ -19,7 +19,7 @@ Router.get(
 );
 
 Router.get('/playlist', googleAuthController.createPlaylist, (req, res) => {
-  return res.status(200).json(res.locals.playlist)
+  return res.status(200).json(res.locals.playlistID)
 })
 
 // googleRouter.post('/', )

@@ -11,7 +11,7 @@ const oauth2Client = new google.auth.OAuth2(
   redirectUrl
 );
 
-let userCredential = null
+// let userCredential = null
 
 const scopes = ['https://www.googleapis.com/auth/youtube'];
 
@@ -60,7 +60,8 @@ const googleAuthController = {
         let { tokens } = await oauth2Client.getToken(q.code);
         oauth2Client.setCredentials(tokens);  
         userCredential = tokens
-        console.log(userCredential)
+        // console.log(userCredential)
+        res.cookie('google', tokens, { httpOnly: true, secure: false })
       }
       return next()
       
@@ -76,8 +77,19 @@ const googleAuthController = {
   },
 
   createPlaylist: async (req, res, next) => {
-    console.log('oauth2client b4 set credentials in createplaylist', oauth2Client)
+    const tokens = req.cookies.google;
+    if (!tokens) {
+      return next({
+        log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
+        status: 401,
+        message: {
+          err: 'No tokens found for creating playlist',
+        },
+      });
+    }
+
     oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(userCredential);
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
     try{
       const response = await youtube.playlists.insert({
@@ -93,11 +105,11 @@ const googleAuthController = {
         }
       }
     })
-      console.log('Response', response)
-      console.log('Response result', response.result)
-      res.locals.playlist = response
+      console.log('Response data', response.data)
+      console.log('Response data id', response.data.id)
+      res.locals.playlistID = response
       return next()
-    } catch {
+    } catch(err) {
       return next({
         log: `Error in googleAuthController.createPlaylist middleware function: ${err}`,
         status: 500,
