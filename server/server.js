@@ -36,6 +36,15 @@ app.get("/spotify/apiCatch", spotifyController.apiCatch, (req, res) => {
   return res.redirect("http://localhost:8080");
 });
 
+app.post(
+  '/spotify/getTrackData',
+  spotifyController.getTrackData,
+  (req, res) => {
+    console.log(res.locals.result);
+    res.status(200).json(res.locals.result);
+  }
+);
+
 // Catch-All Route
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/index.html"), function (err) {
