@@ -2,7 +2,7 @@ import React from 'react';
 import { styled } from '@mui/system';
 import { Box, Container, Typography, Button } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
-import { spotifyThemeColor } from '../theme/customTheme';
+import { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
 
 const HeroContent = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -10,6 +10,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
   justifyContent: 'space-between',
   width: '700px',
   height: 'min-content',
+  margin: 0,
 
   // backgroundColor: 'blue',
 }))
@@ -31,10 +32,18 @@ const BaseButton = styled(Button)(({ theme }) => ({
 }));
 
 const SpotifyButton = styled(BaseButton)(({ theme }) => ({
-  backgroundColor: '#1ED760', // Spotify brand color
+  backgroundColor: spotifyThemeColor, // Spotify brand color
   marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${spotifyThemeColor}`,
+  }
+}));
+
+const YouTubeButton = styled(BaseButton)(({ theme }) => ({
+  backgroundColor: youtTubeThemeColor,
+  marginBottom: '24px',
+  '&:hover': {
+    outline: `2px solid ${youtTubeThemeColor}`,
   }
 }));
 
@@ -63,6 +72,7 @@ function Home({ getSpotifyApi, getTracks }) {
         <HeroContent className='HeroContent'>
             <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
             <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
+            <YouTubeButton>Connect to YouTube</YouTubeButton>
             <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
             <input id='spotify-playlist'></input>
         </HeroContent>
