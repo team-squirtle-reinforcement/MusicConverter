@@ -153,7 +153,7 @@ function Home({ getSpotifyApi, googleOauth }) {
     playlist_id = playlist_id.split('?')[0];
     console.log('PLAYLIST ID: ', playlist_id);
 
-    // show loading
+    // set loading
     setLoading(true);
     setSave(false)
     setMessage('')
