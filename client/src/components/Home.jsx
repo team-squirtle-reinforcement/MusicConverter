@@ -136,9 +136,10 @@ const HeroImage = styled(Box)(({ theme }) => ({
 
 function Home({ getSpotifyApi, googleOauth }) {
   const [loading, setLoading] = useState(false);
-
+  const [save, setSave] = useState(false)
+  const [message, setMessage] = useState('')
   // functionality
-  const getTracks = async () => {
+  const getTracks = async ()=>{
     console.log('clicked button');
     const textBox = document.getElementById('spotify-playlist');
 
@@ -154,27 +155,29 @@ function Home({ getSpotifyApi, googleOauth }) {
 
     // set loading
     setLoading(true);
+    setSave(false)
+    setMessage('')
 
-    try {
+    try{
       const res = await fetch('http://localhost:3000/spotify/getTrackData', {
         method:'POST',
         headers:{'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          token: window.localStorage.getItem('spotify_access_token'),
-          playlist_id: playlist_id
-        })
-      });
-      // end loading
-      setLoading(false);
-      console.log('res in get trackers', res);
-      const playlist_info = await res.json();
-      console.log('playlist_info in gettracker', playlist_info);
-    } catch(err){
-      // end loading
-      setLoading(false);
-      console.log(err);
+        body: JSON.stringify({token: localStorage.getItem('spotify_access_token'),
+              playlist_id: playlist_id,
+              googleToken: localStorage.getItem('google')
+        })});
+        setLoading(false);
+        setSave(true);
+        
+          console.log('res in get trackers', res);
+          const playlist_info = await res.json();
+          console.log('playlist_info in gettracker', playlist_info);
+          setMessage(playlist_info);
+      }catch(err){
+        setLoading(false);
+        console.log(err);
+      }
     }
-  }
 
   return (
     <>
@@ -200,8 +203,9 @@ function Home({ getSpotifyApi, googleOauth }) {
           variant='outlined'
           placeholder='Enter Spotify URL'
         />
-        <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
-        {loading && <CircularProgress color='primary'/>}
+        <TransferNowButton onClick={getTracks} disabled={loading}>Transfer Now</TransferNowButton>
+        {loading && <Typography><CircularProgress color='primary'sx={{ mr: 1 }}/>Loading</Typography>}
+        {save && message && <Typography>{message}</Typography>}
       </HeroContent>
 
       <HeroImage className='HeroImage' />
