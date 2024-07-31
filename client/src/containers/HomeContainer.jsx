@@ -52,9 +52,9 @@ const getSpotifyApi = ()=>{
             playlist_id: playlist_id
       })})
       .then(res=>{
-        console.log(res);
+        console.log('res in get trackers', res);
         res.json().then(playlist_info=>{
-          console.log(playlist_info);
+          console.log('playlist_info in gettracker', playlist_info);
         });
       }).catch(err=>{
         console.log(err);

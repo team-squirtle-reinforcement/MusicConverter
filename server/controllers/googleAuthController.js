@@ -148,7 +148,7 @@ const googleAuthController = {
       el.track.name + ' ' + el.tracks.artists[0].name;
     });
 
-    console.log(queries);
+    console.log('queries in searchVideos: ', queries);
 
     try {
       const videoIDs = [];
@@ -163,7 +163,7 @@ const googleAuthController = {
           videoIDs.push(response.data.items[0].id.videoId);
         }
       }
-      console.log(videoIDs);
+      console.log('videoIDs in searchVideos: ', videoIDs);
       res.locals.videoIDs = videoIDs;
       return next();
     } catch (err) {
@@ -227,7 +227,7 @@ const googleAuthController = {
       // videoIDs.push(response.data.items[0].id.videoId);
       //   }
       // }
-      console.log(response);
+
       res.locals.message = 'Videos added to playlist successfully'
       return next();
     } catch (err) {
