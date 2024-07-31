@@ -36,7 +36,7 @@ const HeroHeading = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   letterSpacing: '-.04em',
   display: 'inline',
-  marginBottom: '12px',
+  marginBottom: '32px',
   fontSize: 'clamp(6rem, 3rem + 6vw, 9rem)',
   lineHeight: '1.1',
   textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
@@ -89,16 +89,17 @@ const UrlBox = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-input': {
     fontSize: '1rem',
     padding: '10px 15px',
+    textAlign: 'center',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
     '&:hover fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
     '&.Mui-focused fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
   },
   [theme.breakpoints.down('sm')]: {
