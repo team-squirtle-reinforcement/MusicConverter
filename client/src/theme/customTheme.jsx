@@ -8,6 +8,30 @@ const customTheme = createTheme({
                     textTransform: 'none',  // remove uppercase transformation default for buttons
                 }
             }
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    borderRadius: '0.5em',
+                    '& .MuiInputBase-input': {
+                        color: theme.palette.white.main,  // white input text color
+                    },
+                    // [theme.breakpoints.down('sm')]: {
+                    //   fontSize: '.2rem', // smaller font size for small screens
+                    // },
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderColor: theme.palette.primary.main,  // primary color
+                        },
+                        '&:hover fieldset': {
+                            borderColor: theme.palette.primary.main,  // primary color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderColor: theme.palette.primary.main,  // primary color on focus
+                        },
+                    },
+                })
+            }
         }
     },
     palette: {
@@ -52,12 +76,10 @@ const customTheme = createTheme({
             fontFamily: 'Poppins, serif',
         },
         button: {
-            fontSize: '1.5rem',
             fontWeight: 400,
             fontFamily: 'Poppins, serif',
             borderRadius: '0.5em',
         },
-
     }
 })
 

@@ -14,8 +14,17 @@ const FlexContainer = styled(Container)(({ theme }) => ({
     // justifyContent: 'center',
     justifyContent: 'space-between',
     width: '100%',
+    minWidth: '300px',
     height: '100%',
-    gap: 'auto',
+
+    [theme.breakpoints.down('lg')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap: '6rem',
+    },
+    [theme.breakpoints.down('sm')]: {
+      gap: '0rem',
+    }
 
     // backgroundColor: 'magenta',
   }));
@@ -37,13 +46,13 @@ const getSpotifyApi = ()=>{
 
 }
 
-  const getTracks = ()=>{
-    console.log('clicked button');
-    const textBox = document.getElementById('spotify-playlist');
-    let playlist_id = textBox.value.split('/');
-    playlist_id = playlist_id[playlist_id.length - 1];
-    playlist_id = playlist_id.split('?')[0];
-    console.log('PLAYLIST ID: ', playlist_id);
+const getTracks = ()=>{
+  console.log('clicked button');
+  const textBox = document.getElementById('spotify-playlist');
+  let playlist_id = textBox.value.split('/');
+  playlist_id = playlist_id[playlist_id.length - 1];
+  playlist_id = playlist_id.split('?')[0];
+  console.log('PLAYLIST ID: ', playlist_id);
 
     fetch('http://localhost:3000/spotify/getTrackData', {
       method:'POST',
@@ -52,15 +61,27 @@ const getSpotifyApi = ()=>{
             playlist_id: playlist_id
       })})
       .then(res=>{
-        console.log(res);
+        console.log('res in get trackers', res);
         res.json().then(playlist_info=>{
-          console.log(playlist_info);
+          console.log('playlist_info in gettracker', playlist_info);
         });
       }).catch(err=>{
         console.log(err);
       })
     }
 
+  const googleOauth = async () => {
+    try {
+      const response = await fetch('api/google');
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      const url = await response.json();
+      window.location.href = url;
+    } catch (err) {
+      console.error('There was a problem with the fetch operation:', err);
+    }
+  };
 
 
 function HomeContainer() {
@@ -75,7 +96,7 @@ function HomeContainer() {
 
   return (
     <FlexContainer className='FlexContainer' maxWidth='xl'>
-        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} />
+        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} googleOauth={googleOauth}/>
     </FlexContainer>
   )
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import GoogleOauth from './components/GoogleOauth';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { createGlobalStyle } from 'styled-components';
@@ -13,12 +14,14 @@ const GlobalStyle = createGlobalStyle`
   }
   
   html {
-    // height: 100%;
-    // width: 100%;
+    height: 100%;
+    width: 100%;
     background-color: #01030B;
+
   }
   
   body {
+    min-height: 1000px;
     margin: 0;
     height: 100%;
     width: 100%;
