@@ -7,7 +7,7 @@ const googleRouter = require('./router/googleRouter');
 const PORT = process.env.port || 3000;
 const fs = require("node:fs");
 
-
+const googleAuthController = require('./controllers/googleAuthController')
 const spotifyController = require("./controllers/spotifyController");
 
 app.use(express.json());
@@ -39,9 +39,12 @@ app.get("/spotify/apiCatch", spotifyController.apiCatch, (req, res) => {
 app.post(
   '/spotify/getTrackData',
   spotifyController.getTrackData,
+  googleAuthController.createPlaylist,
+  googleAuthController.searchVideos,
+  googleAuthController.addVideos,
   (req, res) => {
-    console.log(res.locals.result);
-    res.status(200).json(res.locals.result);
+    console.log(res.locals.message);
+    res.status(200).json(res.locals.message);
   }
 );
 

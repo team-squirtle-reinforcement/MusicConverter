@@ -11,7 +11,7 @@ const oauth2Client = new google.auth.OAuth2(
   redirectUrl
 );
 
-// let userCredential = null
+let userCredential = null;
 
 const scopes = ['https://www.googleapis.com/auth/youtube'];
 
@@ -35,8 +35,7 @@ const googleAuthController = {
 
       res.locals.url = authorizationUrl;
       return next();
-    } 
-    catch (err) {
+    } catch (err) {
       return next({
         log: `Error in googleAuthController.googleOauth middleware function: ${err}`,
         status: 500,
@@ -58,13 +57,12 @@ const googleAuthController = {
       } else {
         // Get access and refresh tokens (if access_type is offline)
         let { tokens } = await oauth2Client.getToken(q.code);
-        oauth2Client.setCredentials(tokens);  
-        userCredential = tokens
-        // console.log(userCredential)
-        res.cookie('google', tokens, { httpOnly: true, secure: false })
+        oauth2Client.setCredentials(tokens);
+        userCredential = tokens;
+        console.log(userCredential);
+        // res.cookie('google', tokens, { httpOnly: true, secure: false });
       }
-      return next()
-      
+      return next();
     } catch (err) {
       return next({
         log: `Error in googleAuthController.oauthCallback middleware function: ${err}`,
@@ -77,39 +75,37 @@ const googleAuthController = {
   },
 
   createPlaylist: async (req, res, next) => {
-    const tokens = req.cookies.google;
-    if (!tokens) {
-      return next({
-        log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
-        status: 401,
-        message: {
-          err: 'No tokens found for creating playlist',
+    // const tokens = req.cookies.google;
+    // console.log('tokens', req.cookies.google);
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for creating playlist',
+    //     },
+    //   });
+    // }
+
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
+    const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
+    try {
+      const response = await youtube.playlists.insert({
+        part: ['snippet,status'],
+        resource: {
+          snippet: {
+            title: 'Spotify',
+          },
+          status: {
+            privacyStatus: 'private',
+          },
         },
       });
-    }
-
-    oauth2Client.setCredentials(tokens);
-    // oauth2Client.setCredentials(userCredential);
-    const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
-    try{
-      const response = await youtube.playlists.insert({
-        "part": [
-        "snippet,status"
-      ],
-      "resource": {
-        "snippet": {
-          "title": "Spotify"
-        },
-        "status": {
-          "privacyStatus": "private"
-        }
-      }
-    })
-      console.log('Response data', response.data)
-      console.log('Response data id', response.data.id)
-      res.locals.playlistID = response
-      return next()
-    } catch(err) {
+      console.log('Response data id', response.data.id);
+      res.locals.playlistID = response.data.id;
+      return next();
+    } catch (err) {
       return next({
         log: `Error in googleAuthController.createPlaylist middleware function: ${err}`,
         status: 500,
@@ -121,25 +117,31 @@ const googleAuthController = {
   },
 
   searchVideos: async (req, res, next) => {
-    const tokens = req.cookies.tokens;
-    if (!tokens) {
-      return next({
-        log: 'Error in googleAuthController.searchVideos middleware function: No tokens found',
-        status: 401,
-        message: {
-          err: 'No tokens found for searching videos',
-        },
-      });
-    }
+    // const tokens = req.cookies.google;
+    // console.log(tokens);
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.searchVideos middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for searching videos',
+    //     },
+    //   });
+    // }
 
-    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
 
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
 
-    const queries = req.query.q.split(',');
-    if (!queries || queries.length === 0) {
+    const { result } = res.locals;
+    console.log('result in searchvideos', result);
+    console.log('tracks items', result.tracks.items);
+    console.log();
+
+    if (!result) {
       return next({
-        log: 'Error in googleAuthController.searchVideos middleware function: No query parameter provided',
+        log: 'Error in googleAuthController.searchVideos middleware function: No song provided',
         status: 400,
         message: {
           err: 'No query parameter provided for searching videos',
@@ -147,21 +149,30 @@ const googleAuthController = {
       });
     }
 
+    const queries = [];
+
+    result.tracks.items.forEach((el) => {
+      const query = el.track.name + ' ' + el.track.artists[0].name;
+      queries.push(query);
+    });
+
+    console.log('queries in searchVideos: ', queries);
+
     try {
-      const videoIds = [];
+      const videoIDs = [];
       for (const query of queries) {
         const response = await youtube.search.list({
           part: 'snippet',
-          q: query.trim(),
-          maxResults: 1
+          q: query,
+          maxResults: 1,
         });
 
         if (response.data.items.length > 0) {
-          videoIds.push(response.data.items[0].id.videoId);
+          videoIDs.push(response.data.items[0].id.videoId);
         }
       }
-
-      res.locals.videoIds = videoIds;
+      console.log('videoIDs in searchVideos: ', videoIDs);
+      res.locals.videoIDs = videoIDs;
       return next();
     } catch (err) {
       return next({
@@ -169,6 +180,71 @@ const googleAuthController = {
         status: 500,
         message: {
           err: 'Error searching for videos',
+        },
+      });
+    }
+  },
+
+  addVideos: async (req, res, next) => {
+    // const tokens = req.cookies.google;
+    // console.log(tokens);
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.addVideos middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for adding videos',
+    //     },
+    //   });
+    // }
+
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
+
+    const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
+
+    // const queries = req.query.q.split(',');
+    // if (!queries || queries.length === 0) {
+    //   return next({
+    //     log: 'Error in googleAuthController.searchVideos middleware function: No query parameter provided',
+    //     status: 400,
+    //     message: {
+    //       err: 'No query parameter provided for searching videos',
+    //     },
+    //   });
+    // }
+    const { playlistID } = res.locals;
+    const { videoIDs } = res.locals;
+    console.log(playlistID, videoIDs);
+    try {
+      for (const videoID of videoIDs) {
+        const response = await youtube.playlistItems.insert({
+          part: 'snippet',
+          resource: {
+            snippet: {
+              playlistId: playlistID,
+              position: 0,
+              resourceId: {
+                kind: 'youtube#video',
+                videoId: videoID,
+              },
+            },
+          },
+        });
+      }
+      //   if (response.data.items.length > 0) {
+      // videoIDs.push(response.data.items[0].id.videoId);
+      //   }
+      // }
+
+      res.locals.message = 'Videos added to playlist successfully';
+      return next();
+    } catch (err) {
+      return next({
+        log: `Error in googleAuthController.addVideos middleware function: ${err}`,
+        status: 500,
+        message: {
+          err: 'Error adding into playlist',
         },
       });
     }

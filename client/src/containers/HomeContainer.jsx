@@ -54,21 +54,21 @@ const getTracks = ()=>{
   playlist_id = playlist_id.split('?')[0];
   console.log('PLAYLIST ID: ', playlist_id);
 
-  fetch('http://localhost:3000/spotify/getTrackData', {
-    method:'POST',
-    headers:{'Content-Type': 'application/json'},
-    body: JSON.stringify({token: window.localStorage.getItem('spotify_access_token'),
-          playlist_id: playlist_id
-    })})
-    .then(res=>{
-      console.log(res);
-      res.json().then(playlist_info=>{
-        console.log(playlist_info);
-      });
-    }).catch(err=>{
-      console.log(err);
-    })
-  }
+    fetch('http://localhost:3000/spotify/getTrackData', {
+      method:'POST',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({token: window.localStorage.getItem('spotify_access_token'),
+            playlist_id: playlist_id
+      })})
+      .then(res=>{
+        console.log('res in get trackers', res);
+        res.json().then(playlist_info=>{
+          console.log('playlist_info in gettracker', playlist_info);
+        });
+      }).catch(err=>{
+        console.log(err);
+      })
+    }
 
   const googleOauth = async () => {
     try {

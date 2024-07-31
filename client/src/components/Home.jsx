@@ -21,7 +21,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
   },
 
   // backgroundColor: 'blue',
-}))
+}));
 
 const HeroHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.white.main,
@@ -57,7 +57,7 @@ const SpotifyButton = styled(BaseButton)(({ theme }) => ({
   // marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${spotifyThemeColor}`,
-  }
+  },
 }));
 
 const YouTubeButton = styled(BaseButton)(({ theme }) => ({
@@ -65,7 +65,7 @@ const YouTubeButton = styled(BaseButton)(({ theme }) => ({
   // marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${youtTubeThemeColor}`,
-  }
+  },
 }));
 
 const TransferNowButton = styled(BaseButton)(({ theme }) => ({
@@ -117,6 +117,7 @@ const HomeInput = styled(TextField)(({ theme }) => ({
 
 
 const HeroImage = styled(Box)(({ theme }) => ({
+
     backgroundImage: `url(${heroImage})`,
     minWidth: '300px',
     maxWidth: '600px',
@@ -136,9 +137,8 @@ const HeroImage = styled(Box)(({ theme }) => ({
     },
 
     // border: '2px solid green',
+
 }));
-
-
 
 function Home({ getSpotifyApi, getTracks, googleOauth }) {
   return (
@@ -153,7 +153,7 @@ function Home({ getSpotifyApi, getTracks, googleOauth }) {
       </HeroContent>
       <HeroImage className='HeroImage' />
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;
