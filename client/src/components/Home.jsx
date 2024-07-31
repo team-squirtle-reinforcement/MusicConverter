@@ -14,7 +14,7 @@ const HeroContent = styled(Container)(({ theme }) => ({
   margin: 0,
 
   // backgroundColor: 'blue',
-}))
+}));
 
 const HeroHeading = styled(Typography)(({ theme }) => ({
   color: theme.palette.white.main,
@@ -29,7 +29,7 @@ const BaseButton = styled(Button)(({ theme }) => ({
   width: '400px',
   '&:hover': {
     outline: `2px solid ${theme.palette.primary.main}`,
-  }
+  },
 }));
 
 const SpotifyButton = styled(BaseButton)(({ theme }) => ({
@@ -37,7 +37,7 @@ const SpotifyButton = styled(BaseButton)(({ theme }) => ({
   marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${spotifyThemeColor}`,
-  }
+  },
 }));
 
 const YouTubeButton = styled(BaseButton)(({ theme }) => ({
@@ -45,7 +45,7 @@ const YouTubeButton = styled(BaseButton)(({ theme }) => ({
   marginBottom: '24px',
   '&:hover': {
     outline: `2px solid ${youtTubeThemeColor}`,
-  }
+  },
 }));
 
 const TransferNowButton = styled(BaseButton)(({ theme }) => ({
@@ -53,36 +53,36 @@ const TransferNowButton = styled(BaseButton)(({ theme }) => ({
 }));
 
 const HeroImage = styled(Box)(({ theme }) => ({
-    backgroundImage: `url(${heroImage})`,
-    width: '500px',
-    height: '500px',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
+  backgroundImage: `url(${heroImage})`,
+  width: '500px',
+  height: '500px',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'contain',
+  backgroundPosition: 'center',
 
-    // border: '2px solid green',
+  // border: '2px solid green',
 }));
-
-
 
 function Home({ getSpotifyApi, getTracks, googleOauth }) {
   return (
     <>
-    {/* <Container sx={{backgroundColor:'magenta', borderRadius: '0.5em', minHeight: '100vh'}}>  */}
-        {/* <Box sx={{display: 'flex', flexDirection: 'column'}}> */}
-        <HeroContent className='HeroContent'>
-            <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
-            <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-            <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
-            <GoogleOauth />
-            <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
-            <input id='spotify-playlist'></input>
-        </HeroContent>
-        {/* </Box> */}
-        <HeroImage className='HeroImage' />
-    {/* </Container> */}
+      {/* <Container sx={{backgroundColor:'magenta', borderRadius: '0.5em', minHeight: '100vh'}}>  */}
+      {/* <Box sx={{display: 'flex', flexDirection: 'column'}}> */}
+      <HeroContent className='HeroContent'>
+        <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
+        <SpotifyButton onClick={getSpotifyApi}>
+          Connect to Spotify
+        </SpotifyButton>
+        <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
+        {/* <GoogleOauth /> */}
+        <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
+        <input id='spotify-playlist'></input>
+      </HeroContent>
+      {/* </Box> */}
+      <HeroImage className='HeroImage' />
+      {/* </Container> */}
     </>
-  )
+  );
 }
 
-export default Home
+export default Home;

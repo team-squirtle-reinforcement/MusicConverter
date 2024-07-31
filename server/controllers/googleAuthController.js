@@ -11,7 +11,7 @@ const oauth2Client = new google.auth.OAuth2(
   redirectUrl
 );
 
-// let userCredential = null
+let userCredential = null;
 
 const scopes = ['https://www.googleapis.com/auth/youtube'];
 
@@ -59,8 +59,8 @@ const googleAuthController = {
         let { tokens } = await oauth2Client.getToken(q.code);
         oauth2Client.setCredentials(tokens);
         userCredential = tokens;
-        // console.log(userCredential)
-        res.cookie('google', tokens, { httpOnly: true, secure: false });
+        console.log(userCredential);
+        // res.cookie('google', tokens, { httpOnly: true, secure: false });
       }
       return next();
     } catch (err) {
@@ -75,19 +75,20 @@ const googleAuthController = {
   },
 
   createPlaylist: async (req, res, next) => {
-    const tokens = req.cookies.google;
-    if (!tokens) {
-      return next({
-        log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
-        status: 401,
-        message: {
-          err: 'No tokens found for creating playlist',
-        },
-      });
-    }
+    // const tokens = req.cookies.google;
+    // console.log('tokens', req.cookies.google);
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for creating playlist',
+    //     },
+    //   });
+    // }
 
-    oauth2Client.setCredentials(tokens);
-    // oauth2Client.setCredentials(userCredential);
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
     try {
       const response = await youtube.playlists.insert({
@@ -116,25 +117,29 @@ const googleAuthController = {
   },
 
   searchVideos: async (req, res, next) => {
-    const tokens = req.cookies.google;
+    // const tokens = req.cookies.google;
     // console.log(tokens);
-    if (!tokens) {
-      return next({
-        log: 'Error in googleAuthController.searchVideos middleware function: No tokens found',
-        status: 401,
-        message: {
-          err: 'No tokens found for searching videos',
-        },
-      });
-    }
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.searchVideos middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for searching videos',
+    //     },
+    //   });
+    // }
 
-    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
 
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
 
     const { result } = res.locals;
+    console.log('result in searchvideos', result);
+    console.log('tracks items', result.tracks.items);
+    console.log();
 
-    if (!result || result.length === 0) {
+    if (!result) {
       return next({
         log: 'Error in googleAuthController.searchVideos middleware function: No song provided',
         status: 400,
@@ -144,8 +149,11 @@ const googleAuthController = {
       });
     }
 
-    const queries = result.tracks.items.map((el) => {
-      el.track.name + ' ' + el.tracks.artists[0].name;
+    const queries = [];
+
+    result.tracks.items.forEach((el) => {
+      const query = el.track.name + ' ' + el.track.artists[0].name;
+      queries.push(query);
     });
 
     console.log('queries in searchVideos: ', queries);
@@ -178,19 +186,20 @@ const googleAuthController = {
   },
 
   addVideos: async (req, res, next) => {
-    const tokens = req.cookies.google;
-    console.log(tokens);
-    if (!tokens) {
-      return next({
-        log: 'Error in googleAuthController.addVideos middleware function: No tokens found',
-        status: 401,
-        message: {
-          err: 'No tokens found for adding videos',
-        },
-      });
-    }
+    // const tokens = req.cookies.google;
+    // console.log(tokens);
+    // if (!tokens) {
+    //   return next({
+    //     log: 'Error in googleAuthController.addVideos middleware function: No tokens found',
+    //     status: 401,
+    //     message: {
+    //       err: 'No tokens found for adding videos',
+    //     },
+    //   });
+    // }
 
-    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(tokens);
+    oauth2Client.setCredentials(userCredential);
 
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
 
@@ -217,7 +226,7 @@ const googleAuthController = {
               position: 0,
               resourceId: {
                 kind: 'youtube#video',
-                videoId: videoIDs[0],
+                videoId: videoID,
               },
             },
           },
@@ -228,7 +237,7 @@ const googleAuthController = {
       //   }
       // }
 
-      res.locals.message = 'Videos added to playlist successfully'
+      res.locals.message = 'Videos added to playlist successfully';
       return next();
     } catch (err) {
       return next({
