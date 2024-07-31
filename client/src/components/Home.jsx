@@ -139,9 +139,15 @@ function Home({ getSpotifyApi, googleOauth }) {
   const [save, setSave] = useState(false)
   const [message, setMessage] = useState('')
   // functionality
-  const getTracks = ()=>{
+  const getTracks = async ()=>{
     console.log('clicked button');
     const textBox = document.getElementById('spotify-playlist');
+
+    if(!textBox.value){
+      console.log('TEXTBOX EMPTY');
+      return;
+    }
+
     let playlist_id = textBox.value.split('/');
     playlist_id = playlist_id[playlist_id.length - 1];
     playlist_id = playlist_id.split('?')[0];
@@ -152,27 +158,25 @@ function Home({ getSpotifyApi, googleOauth }) {
     setSave(false)
     setMessage('')
 
-    fetch('http://localhost:3000/spotify/getTrackData', {
-      method:'POST',
-      headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({token: localStorage.getItem('spotify_access_token'),
-            playlist_id: playlist_id,
-            googleToken: localStorage.getItem('google')
-      })})
-      .then(res=>{
-        // hide loading
+    try{
+      const res = await fetch('http://localhost:3000/spotify/getTrackData', {
+        method:'POST',
+        headers:{'Content-Type': 'application/json'},
+        body: JSON.stringify({token: localStorage.getItem('spotify_access_token'),
+              playlist_id: playlist_id,
+              googleToken: localStorage.getItem('google')
+        })});
         setLoading(false);
-        console.log('res in get trackers', res);
-        res.json().then(result=>{
-          console.log('result in get trackers', result);
-          setSave(true)
-          setMessage(result)
-        });
-      }).catch(err=>{
-        // hide loading
+        setSave(true);
+        
+          console.log('res in get trackers', res);
+          const playlist_info = await res.json();
+          console.log('playlist_info in gettracker', playlist_info);
+          setMessage(playlist_info);
+      }catch(err){
         setLoading(false);
         console.log(err);
-      })
+      }
     }
 
   return (

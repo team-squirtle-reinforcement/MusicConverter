@@ -11,7 +11,7 @@ const oauth2Client = new google.auth.OAuth2(
   redirectUrl
 );
 
-let userCredential = null;
+// let userCredential = null;
 
 const scopes = ['https://www.googleapis.com/auth/youtube'];
 
@@ -79,6 +79,8 @@ const googleAuthController = {
 
     const { googleToken } = req.body
     const tokens = JSON.parse(googleToken.slice(2))
+    const playlistName = res.locals.result.name;
+    console.log('PLAYLIST NAME: ', playlistName);
     // const tokens = req.cookies.google;
     // console.log('tokens', req.cookies);
     // if (!tokens) {
@@ -104,10 +106,10 @@ const googleAuthController = {
         part: ['snippet,status'],
         resource: {
           snippet: {
-            title: result,
+            title: playlistName ? playlistName : 'Spotify',
           },
           status: {
-            privacyStatus: 'private',
+            privacyStatus: 'public',
           },
         },
       });
