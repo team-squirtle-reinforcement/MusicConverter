@@ -147,7 +147,7 @@ function Home({ getSpotifyApi, getTracks, googleOauth }) {
           <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
           <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
           <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
-            <GoogleOauth />
+            {/* <GoogleOauth /> */}
           <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
           <HomeInput id='spotify-playlist' variant='outlined'></HomeInput>
       </HeroContent>

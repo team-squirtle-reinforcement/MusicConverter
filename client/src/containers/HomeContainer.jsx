@@ -57,8 +57,9 @@ const getTracks = ()=>{
     fetch('http://localhost:3000/spotify/getTrackData', {
       method:'POST',
       headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({token: window.localStorage.getItem('spotify_access_token'),
-            playlist_id: playlist_id
+      body: JSON.stringify({token: localStorage.getItem('spotify_access_token'),
+            playlist_id: playlist_id,
+            googleToken: localStorage.getItem('google')
       })})
       .then(res=>{
         console.log('res in get trackers', res);
@@ -87,11 +88,17 @@ const getTracks = ()=>{
 function HomeContainer() {
   if(Cookies.get('spotify_access_token')){
     console.log('IN STORAGE UPDATE')
-    window.localStorage.setItem('spotify_access_token', Cookies.get('spotify_access_token'));
-    window.localStorage.setItem('spotify_refresh_token', Cookies.get('spotify_refresh_token'));
+    localStorage.setItem('spotify_access_token', Cookies.get('spotify_access_token'));
+    localStorage.setItem('spotify_refresh_token', Cookies.get('spotify_refresh_token'));
     //clear them so they aren't re-set every time.
     Cookies.remove('spotify_access_token');
     Cookies.remove('spotify_refresh_token');
+  }
+
+  if(Cookies.get('google')){
+    console.log('IN GOOGLE STORAGE UPDATE')
+    localStorage.setItem('google', Cookies.get('google'));
+    Cookies.remove('google')
   }
 
   return (
