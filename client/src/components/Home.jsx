@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/system';
-import { Box, Container, Typography, Button, TextField } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  TextField,
+  GlobalStyles,
+  CircularProgress
+} from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
 import GoogleOauth from './GoogleOauth';
-import { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
-import customTheme from '../theme/customTheme';
+import customTheme, { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
 
 const HeroContent = styled(Container)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+  // centering buttons to the title
+  alignItems: 'center',
   // width: '700px',
   // height: 'min-content',
   margin: 0,
-  
+
   [theme.breakpoints.down('lg')]: {
-      order: 2, // to place content below image on smaller screens
-      alignItems: 'center',
-      width: 'min-content',
+    order: 2, // to place content below image on smaller screens
+    alignItems: 'center',
+    width: 'min-content',
   },
 
   // backgroundColor: 'blue',
@@ -28,12 +37,14 @@ const HeroHeading = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   letterSpacing: '-.04em',
   display: 'inline',
-  marginBottom: '12px',
-  fontSize: 'clamp(5rem, 2rem + 5vw, 7rem)',
+  marginBottom: '32px',
+  fontSize: 'clamp(6rem, 3rem + 6vw, 9rem)',
+  lineHeight: '1.1',
+  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
 
   [theme.breakpoints.down('sm')]: {
-    fontSize: 'clamp(2rem, 2rem + 5vw, 5rem)'
-  }
+    fontSize: 'clamp(2rem, 2rem + 5vw, 5rem)',
+  },
 }));
 
 const BaseButton = styled(Button)(({ theme }) => ({
@@ -48,8 +59,7 @@ const BaseButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     fontSize: '.875rem',
     width: '300px',
-  }
-
+  },
 }));
 
 const SpotifyButton = styled(BaseButton)(({ theme }) => ({
@@ -68,89 +78,126 @@ const YouTubeButton = styled(BaseButton)(({ theme }) => ({
   },
 }));
 
+// styling for playlist url input box
+const UrlBox = styled(TextField)(({ theme }) => ({
+  width: '100%',
+  maxWidth: '400px',
+  marginBottom: '24px',
+  '& .MuiInputBase-root': {
+    height: '40px',
+    borderRadius: '4px',
+  },
+  '& .MuiInputBase-input': {
+    fontSize: '1rem',
+    padding: '10px 15px',
+    textAlign: 'center',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: theme.palette.white.main,
+    },
+    '&:hover fieldset': {
+      borderColor: theme.palette.white.main,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.white.main,
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '300px',
+  },
+}));
+
 const TransferNowButton = styled(BaseButton)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
-// const HomeInput = styled(TextField)(({ theme }) => ({
-//   width: '400px',
-//   // color: customTheme.palette.white.main,
-//   color: 'red',
-//   [theme.breakpoints.down('sm')]: {
-//     width: '300px',
-//     fontSize: '.2rem',
-//     lineHeight: '1.2',
-//     height: '50px',
-//     backgroundColor: 'red',
-//   }
-// }));
-
-const HomeInput = styled(TextField)(({ theme }) => ({
-  width: '400px',
-  '& .MuiInputBase-root': {
-    // height: '40px', // Set a fixed height for the input base
-    // padding: '0 8px', // Adjust padding to control height
-  },
-  '& .MuiInputBase-input': {
-    fontSize: '1rem', // Default font size
-    padding: '8.5px 14px', // Adjust padding to control height
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '.875rem', // Smaller font size for small screens
-      lineHeight: '1.2',
-    },
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: customTheme.palette.primary.main, // Primary color for the border
-    },
-    '&:hover fieldset': {
-      borderColor: customTheme.palette.primary.main, // Primary color on hover
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: customTheme.palette.primary.main, // Primary color on focus
-    },
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: '300px', // Smaller width for small screens
-  },
-}));
-
-
 const HeroImage = styled(Box)(({ theme }) => ({
+  backgroundImage: `url(${heroImage})`,
+  minWidth: '300px',
+  maxWidth: '600px',
+  width: '100%',
+  minHeight: '450px',
+  height: '100%',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'contain',
+  backgroundPosition: 'center',
 
-    backgroundImage: `url(${heroImage})`,
-    minWidth: '300px',
-    maxWidth: '600px',
-    width: '100%',
-    minHeight: '450px',
-    height: '100%',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    backgroundPosition: 'center',
+  [theme.breakpoints.down('lg')]: {
+    maxHeight: '400px',
+  },
 
-    [theme.breakpoints.down('lg')]: {
-      maxHeight: '400px',
-    },
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '400px',
+  },
 
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '400px',
-    },
-
-    // border: '2px solid green',
-
+  // border: '2px solid green',
 }));
 
-function Home({ getSpotifyApi, getTracks, googleOauth }) {
+function Home({ getSpotifyApi, googleOauth }) {
+  const [loading, setLoading] = useState(false);
+
+  // functionality
+  const getTracks = ()=>{
+    console.log('clicked button');
+    const textBox = document.getElementById('spotify-playlist');
+    let playlist_id = textBox.value.split('/');
+    playlist_id = playlist_id[playlist_id.length - 1];
+    playlist_id = playlist_id.split('?')[0];
+    console.log('PLAYLIST ID: ', playlist_id);
+
+    // show loading
+    setLoading(true);
+
+    fetch('http://localhost:3000/spotify/getTrackData', {
+      method:'POST',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({token: localStorage.getItem('spotify_access_token'),
+            playlist_id: playlist_id,
+            googleToken: localStorage.getItem('google')
+      })})
+      .then(res=>{
+        // hide loading
+        setLoading(false);
+        console.log('res in get trackers', res);
+        res.json().then(playlist_info=>{
+          console.log('playlist_info in gettracker', playlist_info);
+        });
+      }).catch(err=>{
+        // hide loading
+        setLoading(false);
+        console.log(err);
+      })
+    }
+
   return (
     <>
+      <GlobalStyles
+        styles={{
+          body: {
+            margin: 0,
+            padding: 0,
+            background: 'linear-gradient(to bottom, #000000, #333333)',
+            minHeight: '100vh',
+            position: 'relative',
+          },
+        }}
+      />
       <HeroContent className='HeroContent'>
-          <HeroHeading variant='h1'>TuneTransfer</HeroHeading>
-          <SpotifyButton onClick={getSpotifyApi}>Connect to Spotify</SpotifyButton>
-          <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
-            {/* <GoogleOauth /> */}
-          <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
-          <HomeInput id='spotify-playlist' variant='outlined'></HomeInput>
+        <HeroHeading variant='h1'>Syncify.</HeroHeading>
+        <SpotifyButton onClick={getSpotifyApi}>
+          Connect to Spotify
+        </SpotifyButton>
+        <YouTubeButton onClick={googleOauth}>Connect to YouTube</YouTubeButton>
+        <UrlBox
+          id='spotify-playlist'
+          variant='outlined'
+          placeholder='Enter Spotify URL'
+        />
+        <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
+        {loading && <CircularProgress color='primary'/>}
       </HeroContent>
+
       <HeroImage className='HeroImage' />
     </>
   );

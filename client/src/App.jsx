@@ -9,8 +9,7 @@ import HomeContainer from './containers/HomeContainer';
 // define global styles
 const GlobalStyle = createGlobalStyle`
   * {
-    box-style: border-box;
-    color: #01030B;
+    box-sizing: border-box;
   }
   
   html {
