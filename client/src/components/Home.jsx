@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/system';
 import {
   Box,
@@ -7,10 +7,11 @@ import {
   Button,
   TextField,
   GlobalStyles,
+  CircularProgress
 } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
 import GoogleOauth from './GoogleOauth';
-import { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
+import customTheme, { spotifyThemeColor, youtTubeThemeColor } from '../theme/customTheme';
 
 const HeroContent = styled(Container)(({ theme }) => ({
   display: 'flex',
@@ -36,7 +37,7 @@ const HeroHeading = styled(Typography)(({ theme }) => ({
   textAlign: 'left',
   letterSpacing: '-.04em',
   display: 'inline',
-  marginBottom: '12px',
+  marginBottom: '32px',
   fontSize: 'clamp(6rem, 3rem + 6vw, 9rem)',
   lineHeight: '1.1',
   textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
@@ -89,16 +90,17 @@ const UrlBox = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-input': {
     fontSize: '1rem',
     padding: '10px 15px',
+    textAlign: 'center',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
     '&:hover fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
     '&.Mui-focused fieldset': {
-      borderColor: 'white',
+      borderColor: theme.palette.white.main,
     },
   },
   [theme.breakpoints.down('sm')]: {
@@ -132,7 +134,48 @@ const HeroImage = styled(Box)(({ theme }) => ({
   // border: '2px solid green',
 }));
 
-function Home({ getSpotifyApi, getTracks, googleOauth }) {
+function Home({ getSpotifyApi, googleOauth }) {
+  const [loading, setLoading] = useState(false);
+
+  // functionality
+  const getTracks = async () => {
+    console.log('clicked button');
+    const textBox = document.getElementById('spotify-playlist');
+
+    if(!textBox.value){
+      console.log('TEXTBOX EMPTY');
+      return;
+    }
+
+    let playlist_id = textBox.value.split('/');
+    playlist_id = playlist_id[playlist_id.length - 1];
+    playlist_id = playlist_id.split('?')[0];
+    console.log('PLAYLIST ID: ', playlist_id);
+
+    // set loading
+    setLoading(true);
+
+    try {
+      const res = await fetch('http://localhost:3000/spotify/getTrackData', {
+        method:'POST',
+        headers:{'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          token: window.localStorage.getItem('spotify_access_token'),
+          playlist_id: playlist_id
+        })
+      });
+      // end loading
+      setLoading(false);
+      console.log('res in get trackers', res);
+      const playlist_info = await res.json();
+      console.log('playlist_info in gettracker', playlist_info);
+    } catch(err){
+      // end loading
+      setLoading(false);
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <GlobalStyles
@@ -158,7 +201,9 @@ function Home({ getSpotifyApi, getTracks, googleOauth }) {
           placeholder='Enter Spotify URL'
         />
         <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
+        {loading && <CircularProgress color='primary'/>}
       </HeroContent>
+
       <HeroImage className='HeroImage' />
     </>
   );

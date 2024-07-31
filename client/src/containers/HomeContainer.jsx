@@ -101,7 +101,7 @@ function HomeContainer() {
 
   return (
     <FlexContainer className='FlexContainer' maxWidth='xl'>
-        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} googleOauth={googleOauth}/>
+        <Home getSpotifyApi={getSpotifyApi} googleOauth={googleOauth}/>
     </FlexContainer>
   )
 }
