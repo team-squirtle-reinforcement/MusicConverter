@@ -18,9 +18,13 @@ Router.get(
   }
 );
 
-Router.get('/playlist', googleAuthController.createPlaylist, (req, res) => {
-  return res.status(200).json(res.locals.playlistID)
+Router.get('/playlist', googleAuthController.createPlaylist, googleAuthController.searchVideos, googleAuthController.addVideos, (req, res) => {
+  return res.status(200).json(res.locals.playlistItems)
 })
+
+// Router.get('/search', googleAuthController.searchVideos, (req, res) => {
+//   return res.status(200).json(res.locals.videoIDs)
+// })
 
 // googleRouter.post('/', )
 
