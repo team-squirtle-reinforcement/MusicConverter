@@ -100,7 +100,7 @@ const googleAuthController = {
             title: playlistName ? playlistName : 'Spotify',
           },
           status: {
-            privacyStatus: 'private',
+            privacyStatus: 'publict ',
           },
         },
       });
