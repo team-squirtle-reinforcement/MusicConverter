@@ -11,7 +11,7 @@ const oauth2Client = new google.auth.OAuth2(
   redirectUrl
 );
 
-let userCredential = null;
+// let userCredential = null;
 
 const scopes = ['https://www.googleapis.com/auth/youtube'];
 
@@ -58,9 +58,10 @@ const googleAuthController = {
         // Get access and refresh tokens (if access_type is offline)
         let { tokens } = await oauth2Client.getToken(q.code);
         oauth2Client.setCredentials(tokens);
-        userCredential = tokens;
-        console.log(userCredential);
-        // res.cookie('google', tokens, { httpOnly: true, secure: false });
+        // userCredential = tokens;
+        // console.log(userCredential);
+        console.log(tokens)
+        res.cookie('google', tokens);
       }
       return next();
     } catch (err) {
@@ -75,10 +76,13 @@ const googleAuthController = {
   },
 
   createPlaylist: async (req, res, next) => {
+
+    const { googleToken } = req.body
+    const tokens = JSON.parse(googleToken.slice(2))
     const playlistName = res.locals.result.name;
     console.log('PLAYLIST NAME: ', playlistName);
     // const tokens = req.cookies.google;
-    // console.log('tokens', req.cookies.google);
+    // console.log('tokens', req.cookies);
     // if (!tokens) {
     //   return next({
     //     log: 'Error in googleAuthController.createPlaylist middleware function: No tokens found',
@@ -88,9 +92,14 @@ const googleAuthController = {
     //     },
     //   });
     // }
+  
+    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(userCredential);
 
-    // oauth2Client.setCredentials(tokens);
-    oauth2Client.setCredentials(userCredential);
+    let { result } = res.locals
+    if(!result) result = 'Spotify'
+    else result = result.description
+
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
     try {
       const response = await youtube.playlists.insert({
@@ -119,6 +128,8 @@ const googleAuthController = {
   },
 
   searchVideos: async (req, res, next) => {
+    const { googleToken } = req.body
+    const tokens = JSON.parse(googleToken.slice(2))
     // const tokens = req.cookies.google;
     // console.log(tokens);
     // if (!tokens) {
@@ -130,9 +141,9 @@ const googleAuthController = {
     //     },
     //   });
     // }
-
-    // oauth2Client.setCredentials(tokens);
-    oauth2Client.setCredentials(userCredential);
+    
+    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(userCredential);
 
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
 
@@ -188,6 +199,8 @@ const googleAuthController = {
   },
 
   addVideos: async (req, res, next) => {
+    const { googleToken } = req.body
+    const tokens = JSON.parse(googleToken.slice(2))
     // const tokens = req.cookies.google;
     // console.log(tokens);
     // if (!tokens) {
@@ -199,22 +212,12 @@ const googleAuthController = {
     //     },
     //   });
     // }
-
-    // oauth2Client.setCredentials(tokens);
-    oauth2Client.setCredentials(userCredential);
+    
+    oauth2Client.setCredentials(tokens);
+    // oauth2Client.setCredentials(userCredential);
 
     const youtube = google.youtube({ version: 'v3', auth: oauth2Client });
 
-    // const queries = req.query.q.split(',');
-    // if (!queries || queries.length === 0) {
-    //   return next({
-    //     log: 'Error in googleAuthController.searchVideos middleware function: No query parameter provided',
-    //     status: 400,
-    //     message: {
-    //       err: 'No query parameter provided for searching videos',
-    //     },
-    //   });
-    // }
     const { playlistID } = res.locals;
     const { videoIDs } = res.locals;
     console.log(playlistID, videoIDs);
@@ -234,10 +237,6 @@ const googleAuthController = {
           },
         });
       }
-      //   if (response.data.items.length > 0) {
-      // videoIDs.push(response.data.items[0].id.videoId);
-      //   }
-      // }
 
       res.locals.message = 'Videos added to playlist successfully';
       return next();

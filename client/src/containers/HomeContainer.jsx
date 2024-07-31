@@ -97,16 +97,22 @@ try{
 function HomeContainer() {
   if(Cookies.get('spotify_access_token')){
     console.log('IN STORAGE UPDATE')
-    window.localStorage.setItem('spotify_access_token', Cookies.get('spotify_access_token'));
-    window.localStorage.setItem('spotify_refresh_token', Cookies.get('spotify_refresh_token'));
+    localStorage.setItem('spotify_access_token', Cookies.get('spotify_access_token'));
+    localStorage.setItem('spotify_refresh_token', Cookies.get('spotify_refresh_token'));
     //clear them so they aren't re-set every time.
     Cookies.remove('spotify_access_token');
     Cookies.remove('spotify_refresh_token');
   }
 
+  if(Cookies.get('google')){
+    console.log('IN GOOGLE STORAGE UPDATE')
+    localStorage.setItem('google', Cookies.get('google'));
+    Cookies.remove('google')
+  }
+
   return (
     <FlexContainer className='FlexContainer' maxWidth='xl'>
-        <Home getSpotifyApi={getSpotifyApi} getTracks={getTracks} googleOauth={googleOauth}/>
+        <Home getSpotifyApi={getSpotifyApi} googleOauth={googleOauth}/>
     </FlexContainer>
   )
 }
