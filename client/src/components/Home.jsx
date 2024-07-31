@@ -136,7 +136,8 @@ const HeroImage = styled(Box)(({ theme }) => ({
 
 function Home({ getSpotifyApi, googleOauth }) {
   const [loading, setLoading] = useState(false);
-
+  const [save, setSave] = useState(false)
+  const [message, setMessage] = useState('')
   // functionality
   const getTracks = ()=>{
     console.log('clicked button');
@@ -148,6 +149,8 @@ function Home({ getSpotifyApi, googleOauth }) {
 
     // show loading
     setLoading(true);
+    setSave(false)
+    setMessage('')
 
     fetch('http://localhost:3000/spotify/getTrackData', {
       method:'POST',
@@ -160,8 +163,10 @@ function Home({ getSpotifyApi, googleOauth }) {
         // hide loading
         setLoading(false);
         console.log('res in get trackers', res);
-        res.json().then(playlist_info=>{
-          console.log('playlist_info in gettracker', playlist_info);
+        res.json().then(result=>{
+          console.log('result in get trackers', result);
+          setSave(true)
+          setMessage(result)
         });
       }).catch(err=>{
         // hide loading
@@ -194,8 +199,9 @@ function Home({ getSpotifyApi, googleOauth }) {
           variant='outlined'
           placeholder='Enter Spotify URL'
         />
-        <TransferNowButton onClick={getTracks}>Transfer Now</TransferNowButton>
-        {loading && <CircularProgress color='primary'/>}
+        <TransferNowButton onClick={getTracks} disabled={loading}>Transfer Now</TransferNowButton>
+        {loading && <Typography><CircularProgress color='primary'sx={{ mr: 1 }}/>Loading</Typography>}
+        {save && message && <Typography>{message}</Typography>}
       </HeroContent>
 
       <HeroImage className='HeroImage' />
