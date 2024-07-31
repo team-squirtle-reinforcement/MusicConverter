@@ -53,6 +53,7 @@ app.post(
       message: res.locals.message,
       playlist_link:
         'https://youtube.com/playlist?list=' + res.locals.playlistID,
+      playlist_name: res.locals.result.name,
     });
   }
 );

@@ -7,7 +7,8 @@ import {
   Button,
   TextField,
   GlobalStyles,
-  CircularProgress
+  CircularProgress,
+  Link
 } from '@mui/material';
 import heroImage from '../../public/assets/heroImage.png';
 import GoogleOauth from './GoogleOauth';
@@ -138,6 +139,8 @@ function Home({ getSpotifyApi, googleOauth }) {
   const [loading, setLoading] = useState(false);
   const [save, setSave] = useState(false)
   const [message, setMessage] = useState('')
+  const [playlist_link, setLink] = useState('')
+  const [playlist_name, setLinkName] = useState('')
   // functionality
   const getTracks = async ()=>{
     console.log('clicked button');
@@ -172,10 +175,13 @@ function Home({ getSpotifyApi, googleOauth }) {
           console.log('res in get trackers', res);
           const playlist_info = await res.json();
 
-          const { message, playlist_link } = playlist_info;
+          //{ message, playlist_link, playlist_name } = playlist_info;
+
           console.log('PLAYLIST LINK: ', playlist_link);
 
-          setMessage(message);
+          setMessage(playlist_info.message);
+          setLink(playlist_info.playlist_link);
+          setLinkName(playlist_info.playlist_name);
       }catch(err){
         setLoading(false);
         console.log(err);
@@ -208,7 +214,7 @@ function Home({ getSpotifyApi, googleOauth }) {
         />
         <TransferNowButton onClick={getTracks} disabled={loading}>Transfer Now</TransferNowButton>
         {loading && <Typography><CircularProgress color='primary'sx={{ mr: 1 }}/>Loading</Typography>}
-        {save && message && <Typography>{message}</Typography>}
+        {save && message && <Typography>{message}<br/><Link href={playlist_link} >{playlist_name}</Link></Typography>}
       </HeroContent>
 
       <HeroImage className='HeroImage' />
