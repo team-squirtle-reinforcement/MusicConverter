@@ -171,8 +171,11 @@ function Home({ getSpotifyApi, googleOauth }) {
         
           console.log('res in get trackers', res);
           const playlist_info = await res.json();
-          console.log('playlist_info in gettracker', playlist_info);
-          setMessage(playlist_info);
+
+          const { message, playlist_link } = playlist_info;
+          console.log('PLAYLIST LINK: ', playlist_link);
+
+          setMessage(message);
       }catch(err){
         setLoading(false);
         console.log(err);
