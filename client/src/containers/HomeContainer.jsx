@@ -67,9 +67,14 @@ try{
           playlist_id: playlist_id
     })});
 
+
       console.log('res in get trackers', res);
       const playlist_info = await res.json();
-      console.log('playlist_info in gettracker', playlist_info);
+
+      const { message, playlist_link } = playlist_info;
+
+      console.log('MESSAGE FE: ', message);
+      console.log('PL LINK FE:', playlist_link);
   }catch(err){
     console.log(err);
   }
