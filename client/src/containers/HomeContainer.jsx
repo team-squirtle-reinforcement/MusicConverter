@@ -46,6 +46,35 @@ const getSpotifyApi = ()=>{
 
 }
 
+const getTracks = async ()=>{
+  console.log('clicked button');
+  const textBox = document.getElementById('spotify-playlist');
+
+  if(!textBox.value){
+    console.log('TEXTBOX EMPTY');
+    return;
+  }
+
+  let playlist_id = textBox.value.split('/');
+  playlist_id = playlist_id[playlist_id.length - 1];
+  playlist_id = playlist_id.split('?')[0];
+  console.log('PLAYLIST ID: ', playlist_id);
+try{
+  const res = await fetch('http://localhost:3000/spotify/getTrackData', {
+    method:'POST',
+    headers:{'Content-Type': 'application/json'},
+    body: JSON.stringify({token: window.localStorage.getItem('spotify_access_token'),
+          playlist_id: playlist_id
+    })});
+
+      console.log('res in get trackers', res);
+      const playlist_info = await res.json();
+      console.log('playlist_info in gettracker', playlist_info);
+  }catch(err){
+    console.log(err);
+  }
+}
+
   const googleOauth = async () => {
     try {
       const response = await fetch('api/google');

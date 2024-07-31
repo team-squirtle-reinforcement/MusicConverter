@@ -75,6 +75,8 @@ const googleAuthController = {
   },
 
   createPlaylist: async (req, res, next) => {
+    const playlistName = res.locals.result.name;
+    console.log('PLAYLIST NAME: ', playlistName);
     // const tokens = req.cookies.google;
     // console.log('tokens', req.cookies.google);
     // if (!tokens) {
@@ -95,10 +97,10 @@ const googleAuthController = {
         part: ['snippet,status'],
         resource: {
           snippet: {
-            title: 'Spotify',
+            title: playlistName ? playlistName : 'Spotify',
           },
           status: {
-            privacyStatus: 'private',
+            privacyStatus: 'public',
           },
         },
       });
