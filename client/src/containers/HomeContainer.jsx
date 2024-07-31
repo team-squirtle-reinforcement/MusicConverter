@@ -49,6 +49,12 @@ const getSpotifyApi = ()=>{
 const getTracks = async ()=>{
   console.log('clicked button');
   const textBox = document.getElementById('spotify-playlist');
+
+  if(!textBox.value){
+    console.log('TEXTBOX EMPTY');
+    return;
+  }
+
   let playlist_id = textBox.value.split('/');
   playlist_id = playlist_id[playlist_id.length - 1];
   playlist_id = playlist_id.split('?')[0];
