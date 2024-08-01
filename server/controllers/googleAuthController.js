@@ -166,7 +166,7 @@ const googleAuthController = {
 
     result.tracks.items.forEach((el) => {
       const query = el.track.name + ' ' + el.track.artists[0].name;
-      queries.push(query);
+      queries.unshift(query);
     });
 
     console.log('queries in searchVideos: ', queries);
